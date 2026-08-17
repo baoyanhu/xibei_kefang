@@ -1,0 +1,122 @@
+/**
+ * Jenkinsfile 模板（声明式 pipeline）
+ *
+ * Stage 划分：
+ *   1. Checkout        - 拉取代码
+ *   2. Install         - 安装依赖（pnpm，按需改 npm/yarn）
+ *   3. Lint            - 代码质量门禁（eslint --max-warnings=0）
+ *   4. Build           - 生产构建（vite build）
+ *   5. Deploy          - 部署到目标环境（占位，需接入实际发布系统）
+ *
+ * 使用方式：
+ *   1. 复制本文件到项目根
+ *   2. 修改 environment 中的 NODE_VERSION / PNPM_VERSION / 部署目标
+ *   3. Deploy stage 替换为实际部署脚本（rsync / docker / oss 上传等）
+ *
+ * 环境变量由 Jenkins 注入（branch / GIT_COMMIT 等）。
+ */
+
+pipeline {
+    agent any
+
+    environment {
+        NODE_VERSION = '20'
+        PNPM_VERSION = '9.15.9'
+        // 构建产物目录
+        DIST_DIR = 'dist'
+    }
+
+    options {
+        timestamps()
+        timeout(time: 30, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install') {
+            steps {
+                sh '''
+                    # 使用 nvm 切换 Node 版本
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm install ${NODE_VERSION}
+                    nvm use ${NODE_VERSION}
+
+                    # 启用 pnpm
+                    npm install -g pnpm@${PNPM_VERSION}
+
+                    # 安装依赖（优先使用 lockfile，保证可重复构建）
+                    pnpm install --frozen-lockfile
+                '''
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use ${NODE_VERSION}
+
+                    # 零警告红线
+                    pnpm lint
+                '''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use ${NODE_VERSION}
+
+                    pnpm build
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                // 仅指定分支触发部署（按需修改分支名）
+                anyOf {
+                    branch 'main'
+                    branch 'master'
+                    branch 'production'
+                }
+            }
+            steps {
+                sh '''
+                    echo "TODO: 替换为实际部署脚本"
+                    echo "常见方式："
+                    echo "  1. rsync 同步 dist/ 到静态服务器"
+                    echo "  2. oss/cos 上传 dist/ 到对象存储"
+                    echo "  3. docker 构建镜像并推送"
+                    echo "当前产物："
+                    ls -la ${DIST_DIR}
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✓ 构建成功'
+        }
+        failure {
+            echo '✗ 构建失败'
+            // TODO: 接入钉钉/飞书 webhook 通知
+        }
+        always {
+            // 清理工作区（可选，按需保留加速下次构建）
+            // cleanWs()
+        }
+    }
+}

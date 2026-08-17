@@ -1,0 +1,10 @@
+{
+  // TS 配置入口：拆分为 node（构建脚本）与 app（应用源码）两个 project references
+  "files": [],
+  "references": [
+    // node 项目：包含 vite.config.ts 与 vite/plugins 下的构建脚本
+    { "path": "./tsconfig.node.json" },
+    // app 项目：包含 src 下的应用源码
+    { "path": "./tsconfig.app.json" }
+  ]
+}

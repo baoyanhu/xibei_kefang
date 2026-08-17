@@ -1,0 +1,21 @@
+/**
+ * VS Code 团队推荐插件清单
+ *
+ * 职责：
+ * - 复制到真实项目后，VS Code 会自动弹出"安装推荐插件"提示
+ * - 仅做推荐，不强制；团队可自行决定是否启用
+ */
+{
+  "recommendations": [
+    // Vue 3 官方语言支持插件（VSCode 显示名为 Vue - Official，扩展 ID 仍为 Vue.volar）
+    "Vue.volar",
+    // ESLint 集成插件
+    "dbaeumer.vscode-eslint",
+    // Prettier 集成插件
+    "esbenp.prettier-vscode",
+    // Stylelint 集成插件（如项目启用样式 lint）
+    "stylelint.vscode-stylelint",
+    // .editorconfig 文件支持
+    "EditorConfig.EditorConfig"
+  ]
+}

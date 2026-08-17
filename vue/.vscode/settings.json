@@ -1,0 +1,20 @@
+{
+  // 保存时自动格式化
+  "editor.formatOnSave": true,
+  // 默认格式化工具：Prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    // 保存时自动修复 ESLint 可修复问题
+    "source.fixAll.eslint": "always"
+  },
+  // 使用 ESLint 9 flat config
+  "eslint.useFlatConfig": true,
+  "[vue]": {
+    // Vue 文件也使用 Prettier 格式化
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    // JSON 文件也使用 Prettier 格式化
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

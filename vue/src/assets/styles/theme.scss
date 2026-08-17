@@ -1,0 +1,46 @@
+/**
+ * Vant4 主题覆盖（基线中性骨架 —— html2vue 从原型抽取填充）
+ *
+ * 本文件是 html2vue 还原流程的**抽取落点**，不是产品直发文件、不是框架只读文件：
+ * - 基线仓库里保持中性骨架（空 :root + 分区注释），保证与任何具体业务无关；
+ * - 还原某个原型时，A 块把该原型全局 `<style>` 里「scoped 够不到的部分」重构分发到这里：
+ *     ① Vant --van-* 变量：对齐原型视觉（品牌色 / 圆角 / 字号 / 各组件尺寸与配色）
+ *     ② .van-xxx 结构覆盖：Vant 组件默认样式与原型有差异时的局部覆盖
+ *     ③ teleport 弹层骨架：van-popup / van-dialog 等 teleport 到 body、scoped 够不到的样式
+ *     ④ 跨组件复用的原型全局类（≥2 处用到）：从原型 <style> 重构分发进来
+ * - 落点判定见 h5-code-style §6.3「Token 落点判定表」。
+ *
+ * 约定：
+ * - --van-* 变量值优先引用 tokens.scss 抽取出的业务变量（如 var(--brand-start)），
+ *   tokens 里没有的 Vant 专属尺寸/配色再按原型写字面值。
+ * - 组件专属、单处使用的页面样式不进这里 → 归各组件 <style scoped> + :deep()。
+ * - main.ts import 链顺序固定：base.scss → tokens.scss → theme.scss。
+ */
+
+/* ==========================================================================
+   ① Vant --van-* 变量区（对齐原型视觉）
+   ⚠️ 用 html:root（0-1-1）而非单 :root：Vant 组件 CSS 按需注入时自带 :root{--van-*}
+   默认值，单 :root 同级后注入会覆盖本文件变量；升特异性后无论注入顺序如何均稳定生效
+   ========================================================================== */
+html:root {
+  /* 常见接线参考（迁入时按原型实际值填，不套此模板）：
+     --van-primary-color: var(--brand-start);
+     --van-text-color: var(--ink-primary);
+     --van-text-color-2 / -3: var(--ink-secondary) / var(--ink-tertiary);
+     --van-border-color: var(--divider);
+     --van-background / -2: var(--panel-bg) / var(--card-bg);
+     --van-base-font: 原型字体栈（PingFang SC 等）
+     --van-overlay-background / --van-popup-round-radius 等按原型 */
+}
+
+/* ==========================================================================
+   ② .van-xxx 结构覆盖区 + ③ teleport 弹层骨架（van-popup / van-dialog 等 scoped 够不到的）
+   ⚠️ Vant 按需注入晚于本文件时，类覆盖（.van-xxx{...}）会被后注入的 Vant 默认值盖回
+   ——变量能表达的优先走 ① 区变量；万不得已用类覆盖时升特异性（复合选择器），禁 !important
+   ========================================================================== */
+
+/* ==========================================================================
+   ④ 跨组件复用的原型全局类（≥2 处用到，从原型全局 <style> 重构分发进来）
+   例：img.ic 图标基元（块级、flex 不收缩）、sheet-popup 底弹骨架等
+   —— 只用 1 次的样式不进这里，归组件 <style scoped>
+   ========================================================================== */

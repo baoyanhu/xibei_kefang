@@ -1,0 +1,34 @@
+# 依赖目录
+# 依赖安装目录
+node_modules
+# pnpm 本地存储目录
+.pnpm-store
+# npm 锁文件（项目使用 pnpm）
+package-lock.json
+# yarn 锁文件（项目使用 pnpm）
+yarn.lock
+
+# 构建产物
+# Vite 构建输出目录
+dist
+# TypeScript 增量构建信息文件
+*.tsbuildinfo
+
+# 自动生成类型声明
+# auto-import 生成的 ESLint 全局变量配置
+.eslintrc-auto-import.json
+# unplugin-auto-import 生成的 API 类型声明
+types/auto-import.d.ts
+# unplugin-vue-components 生成的组件类型声明
+types/components.d.ts
+
+# 本地环境变量（不应提交到版本库）
+.env.local
+.env.*.local
+
+# 日志文件
+*.log
+npm-debug.log*
+
+# 系统文件
+.DS_Store

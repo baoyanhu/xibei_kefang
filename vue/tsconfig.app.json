@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    // 目标 ECMAScript 版本：使用最新特性，由 Vite 负责编译降级
+    "target": "ESNext",
+    // 模块系统：ES Modules，配合 Vite 使用
+    "module": "ESNext",
+    // 模块解析策略：适配 Bundler 环境
+    "moduleResolution": "Bundler",
+    // 开启所有严格类型检查规则
+    "strict": true,
+    // 保留 JSX 语法，由 Vue 插件处理
+    "jsx": "preserve",
+    // 生成 sourcemap，供开发调试使用
+    "sourceMap": true,
+    // 允许 import JSON 文件
+    "resolveJsonModule": true,
+    // 兼容 CommonJS 模块的默认导入
+    "esModuleInterop": true,
+    // 编译时引入的 DOM 与 ES 内置类型库
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    // 跳过第三方声明文件类型检查，减少构建开销
+    "skipLibCheck": true,
+    // 不输出编译产物，仅做类型检查（Vite 负责实际构建）
+    "noEmit": true,
+    // 启用 project references 的 composite 标志
+    "composite": true,
+    // TS 增量构建信息文件路径，放在 node_modules/.tmp 下避免污染仓库
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    // 路径别名：@ 映射到 src 目录，与 vite.config.ts resolve.alias 保持一致
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    // 未使用的局部变量报错，强制保持代码整洁
+    "noUnusedLocals": true,
+    // 未使用的函数参数报错（以下划线开头的参数除外）
+    "noUnusedParameters": true,
+    // switch 语句禁止 case 穿透，除非显式写 break
+    "noFallthroughCasesInSwitch": true,
+    // 强制文件名大小写一致，避免跨平台差异
+    "forceConsistentCasingInFileNames": true
+  },
+  // 应用源码包含范围
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+}

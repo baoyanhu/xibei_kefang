@@ -1,0 +1,26 @@
+/**
+ * 业务设计 token（基线空占位 —— html2vue 从原型抽取填充）
+ *
+ * 本文件是 html2vue 还原流程的**抽取落点**，不是产品直发文件、不是框架只读文件：
+ * - 基线仓库里保持空占位（空 :root），保证与任何具体业务无关；
+ * - 还原某个原型时，A 块把该原型 <style> 的 `:root` 业务语义变量**照抄迁入**这里
+ *   （颜色 / 品牌渐变 / 墨色三级 / 语义色 / 圆角 / 阴影 / 间距 / 字号阶梯 等），
+ *   值直接来自那份原型——这是「1:1 颜色还原」的来源，不靠模型凭先验编。
+ * - 落点判定见 h5-code-style §6.3「Token 落点判定表」。
+ *
+ * 约定：
+ * - 只放原型 `:root` 里的**业务语义变量**；Vant 主题变量（--van-*）归 theme.scss。
+ * - px 基准跟随原型设计稿宽度（与 postcss viewportWidth 对齐），迁入时值照抄、禁二次缩放。
+ * - main.ts import 链顺序固定：base.scss → tokens.scss → theme.scss（theme 可能引用本文件的值）。
+ */
+:root {
+  /* ===== html2vue 落点：原型 <style> 的 :root 业务语义变量照抄迁入此处（值照抄原型，勿改） ===== */
+
+  /* 常见结构参考（迁入时按原型实际变量名照抄，不套此模板）：
+     --page-bg / --card-bg            页面底 / 卡片底
+     --ink-primary/secondary/tertiary 墨色三级
+     --brand-start / --brand-end / --brand-grad   品牌渐变
+     --up / --down / --warn           语义色（涨/跌/预警，正向绿/负向红以原型为准）
+     --divider / --panel-bg / --card-shadow   分隔线 / 面板底 / 卡片阴影
+     圆角 / 阴影 / 间距 / 字号阶梯等按原型命名照抄 */
+}

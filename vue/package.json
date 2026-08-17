@@ -1,0 +1,64 @@
+{
+  "name": "fe-spec-h5",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "H5端标准项目基线",
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "build:test": "vue-tsc -b && vite build --mode test",
+    "preview": "vite preview",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "axios": "^1.19.0",
+    "echarts": "^6.1.0",
+    "mockjs": "^1.1.0",
+    "pinia": "^3.0.4",
+    "pinia-plugin-persistedstate": "^4.7.1",
+    "vant": "^4.10.0",
+    "vue": "^3.5.41",
+    "vue-echarts": "^8.1.0",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/mockjs": "^1.0.10",
+    "@types/node": "^22.20.1",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-vue": "^9.33.0",
+    "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "postcss-px-to-viewport-8-plugin": "^1.2.5",
+    "prettier": "^3.5.3",
+    "sass": "^1.102.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.66.0",
+    "unplugin-vue-components": "^0.28.0",
+    "vconsole": "^3.15.1",
+    "vite": "^6.4.3",
+    "vite-plugin-compression2": "^1.4.0",
+    "vite-plugin-mock": "^3.0.2",
+    "vue-tsc": "^2.2.12"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,vue}": [
+      "eslint --max-warnings=0 --fix",
+      "prettier --write"
+    ],
+    "*.{scss,css,json}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

@@ -1,0 +1,20 @@
+# 依赖目录与产物
+# 构建产物目录
+dist
+# 依赖安装目录
+node_modules
+# pnpm 锁文件（由 pnpm 管理格式，Prettier 不处理）
+pnpm-lock.yaml
+# npm 锁文件（如存在）
+package-lock.json
+# yarn 锁文件（如存在）
+yarn.lock
+
+# 自动生成类型声明
+# auto-import 生成的类型声明
+types/auto-import.d.ts
+# auto-import 生成的 ESLint 全局变量配置
+.eslintrc-auto-import.json
+
+# 日志文件
+*.log

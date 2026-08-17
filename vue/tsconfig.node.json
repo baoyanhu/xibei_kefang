@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    // 启用 project references 的 composite 标志
+    "composite": true,
+    // Node 构建脚本使用较稳定的 ES2022 目标
+    "target": "ES2022",
+    // 模块系统：ES Modules
+    "module": "ESNext",
+    // 模块解析策略：适配 Bundler 环境
+    "moduleResolution": "Bundler",
+    // 开启所有严格类型检查规则
+    "strict": true,
+    // 跳过第三方声明文件类型检查
+    "skipLibCheck": true,
+    // 不输出编译产物，仅做类型检查
+    "noEmit": true,
+    // TS 增量构建信息文件路径
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    // 引入 Node.js 内置类型
+    "types": ["node"]
+  },
+  // node 项目包含范围：Vite 配置与插件脚本
+  "include": ["vite.config.ts", "vite/plugins/**/*.ts"]
+}
