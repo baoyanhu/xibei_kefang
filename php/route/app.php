@@ -10,6 +10,12 @@ Route::group('admin', function () {
     // ⚠️ B 端路由必须挂 AdminSign 验签中间件（§1.12 入站验签铁律）
     Route::post('store/list', \app\controller\admin\Store::class . '/listOp')
         ->middleware(\app\middleware\AdminSign::class);
+
+    // B 端基础样式配置：详情与保存均执行统一入站验签。
+    Route::post('style/detail', \app\controller\admin\Style::class . '/detailOp')
+        ->middleware(\app\middleware\AdminSign::class);
+    Route::post('style/save', \app\controller\admin\Style::class . '/saveOp')
+        ->middleware(\app\middleware\AdminSign::class);
 });
 
 // ==================== API 分组（C 端）====================
