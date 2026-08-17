@@ -31,8 +31,6 @@ return [
             'password'        => env('database.password', 'root'),
             // 端口
             'hostport'        => env('database.hostport', '3306'),
-            // socket连接（MAMP等本地环境）
-            'socket'          => env('database.socket', '/Applications/MAMP/tmp/mysql/mysql.sock'),
             // 数据库连接参数
             'params'          => [],
             // 数据库编码
