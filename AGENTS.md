@@ -2,7 +2,7 @@
 
 > 本文件由 init-project 技能生成。规范细节在子技能里,本文件做**路径强制分发与全局工作流对齐**。
 >
-> 📖 **全局通用工作流**：任务执行前必须严格遵循 [docs/AGENTS_GLOBAL.md](file:///Users/baoyanhu/其它项目/西贝AI学习/ai1/docs/AGENTS_GLOBAL.md) 规定的中文语言偏好、`docs/todos/` 任务清单确认流程、影响面检查、原型驱动开发 SOP 与完成报告规范。
+> 📖 **全局通用工作流**：任务执行前必须严格遵循 [docs/AGENTS_GLOBAL.md](docs/AGENTS_GLOBAL.md) 规定的中文语言偏好、`docs/todos/` 任务清单确认流程、影响面检查、原型驱动开发 SOP 与完成报告规范。
 
 ## 项目结构
 
@@ -108,7 +108,7 @@ AI 助手编辑文件前:
    - `php/**` → 加载 php-code-style
    - `vue/**` 写代码 → 加载 h5-code-style
    - `vue/**` 且任务是 HTML 转 Vue(触发词「html 转 vue」「html 生成 vue」「还原原型」等) → 加载 html2vue
-3. 遵循 [docs/AGENTS_GLOBAL.md](file:///Users/baoyanhu/其它项目/西贝AI学习/ai1/docs/AGENTS_GLOBAL.md) 建立待办任务与影响面检查
+3. 遵循 [docs/AGENTS_GLOBAL.md](docs/AGENTS_GLOBAL.md) 建立待办任务与影响面检查
 4. 按技能规范编写代码
 5. 改完按技能验证清单跑 `pnpm lint` / `pnpm build`(前端)或 §5.7 门禁 grep(后端)
 6. 输出标准完成报告并提醒用户进行测试验证
