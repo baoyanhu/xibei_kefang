@@ -16,6 +16,12 @@ Route::group('admin', function () {
         ->middleware(\app\middleware\AdminSign::class);
     Route::post('style/save', \app\controller\admin\Style::class . '/saveOp')
         ->middleware(\app\middleware\AdminSign::class);
+
+    // B 端基础问卷配置：详情与保存均执行统一入站验签。
+    Route::post('questionnaire/detail', \app\controller\admin\Questionnaire::class . '/detailOp')
+        ->middleware(\app\middleware\AdminSign::class);
+    Route::post('questionnaire/save', \app\controller\admin\Questionnaire::class . '/saveOp')
+        ->middleware(\app\middleware\AdminSign::class);
 });
 
 // ==================== API 分组（C 端）====================
