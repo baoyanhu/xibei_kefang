@@ -22,6 +22,12 @@ Route::group('admin', function () {
         ->middleware(\app\middleware\AdminSign::class);
     Route::post('questionnaire/save', \app\controller\admin\Questionnaire::class . '/saveOp')
         ->middleware(\app\middleware\AdminSign::class);
+
+    // B 端基础菜品配置：详情与保存均执行统一入站验签。
+    Route::post('dish/detail', \app\controller\admin\Dish::class . '/detailOp')
+        ->middleware(\app\middleware\AdminSign::class);
+    Route::post('dish/save', \app\controller\admin\Dish::class . '/saveOp')
+        ->middleware(\app\middleware\AdminSign::class);
 });
 
 // ==================== API 分组（C 端）====================

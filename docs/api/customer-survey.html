@@ -45,7 +45,7 @@
     <button id="homeButton" class="home-button hidden">返回首页</button>
     <section id="welcome" class="panel">
       <h1>餐后评价问卷 API 接口文档</h1>
-      <p class="muted">当前共 4 个业务接口，均属于 B 端基础配置。点击左侧目录查看单个接口契约。</p>
+      <p class="muted">当前共 6 个业务接口，均属于 B 端基础配置。点击左侧目录查看单个接口契约。</p>
     </section>
     <section id="content" class="panel hidden"></section>
   </main>
@@ -191,6 +191,56 @@
           ['data.points', 'integer', '已保存的积分数量；积分关闭时为 0。'],
           ['data.reward_coupon', 'integer', '已保存的券开关。'],
           ['data.coupon_template_id', 'string', '已保存的券模板 ID；券关闭时为空字符串。']
+        ]
+      },
+      {
+        code: 'B05', group: 'B 端—基础配置', name: '查询菜品配置', method: 'POST', path: '/admin/dish/detail',
+        params: [
+          ['merchant_id', 'integer', '必填', '商户 ID，必须是正整数。']
+        ],
+        exampleJson: { merchant_id: 1 },
+        exampleCurl: `curl -X POST 'http://localhost/admin/dish/detail' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"merchant_id":1}'`,
+        responseJson: {
+          code: 0, message: '成功', data: {
+            merchant_id: 1,
+            dish_link_enabled: 1
+          }
+        },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data', 'object', '菜品配置对象。'],
+          ['data.merchant_id', 'integer', '商户 ID。'],
+          ['data.dish_link_enabled', 'integer', '菜品数据关联开关：1=启用（问卷可关联 CRM 菜品）/ 0=禁用；未配置时默认 0。']
+        ]
+      },
+      {
+        code: 'B06', group: 'B 端—基础配置', name: '保存菜品配置', method: 'POST', path: '/admin/dish/save',
+        params: [
+          ['merchant_id', 'integer', '必填', '商户 ID，必须是正整数。'],
+          ['dish_link_enabled', 'integer', '必填', '菜品数据关联开关：1=启用 / 0=禁用。']
+        ],
+        exampleJson: {
+          merchant_id: 1,
+          dish_link_enabled: 1
+        },
+        exampleCurl: `curl -X POST 'http://localhost/admin/dish/save' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"merchant_id":1,"dish_link_enabled":1}'`,
+        responseJson: {
+          code: 0, message: '成功', data: {
+            merchant_id: 1,
+            dish_link_enabled: 1
+          }
+        },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data', 'object', '保存后的菜品配置对象。'],
+          ['data.merchant_id', 'integer', '商户 ID。'],
+          ['data.dish_link_enabled', 'integer', '已保存的菜品数据关联开关。']
         ]
       }
     ];

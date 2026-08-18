@@ -16,6 +16,9 @@ class MerchantConfigModel extends Model
     /** 问卷配置类型，对应 merchant_configs.config_type=reward。 */
     public const TYPE_REWARD = 'reward';
 
+    /** 菜品配置类型，对应 merchant_configs.config_type=dish。 */
+    public const TYPE_DISH = 'dish';
+
     /** 逻辑表名，不包含数据库前缀。 */
     protected $name = 'merchant_configs';
 

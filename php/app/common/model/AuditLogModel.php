@@ -22,6 +22,12 @@ class AuditLogModel extends Model
     /** 商户问卷配置审计目标类型。 */
     public const TARGET_MERCHANT_QUESTIONNAIRE_CONFIG = 'merchant_questionnaire_config';
 
+    /** 菜品配置保存动作。 */
+    public const ACTION_SAVE_DISH_CONFIG = 'save_dish_config';
+
+    /** 商户菜品配置审计目标类型。 */
+    public const TARGET_MERCHANT_DISH_CONFIG = 'merchant_dish_config';
+
     /** 逻辑表名，不包含数据库前缀。 */
     protected $name = 'audit_logs';
 
