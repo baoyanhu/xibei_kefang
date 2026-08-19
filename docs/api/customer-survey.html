@@ -433,6 +433,97 @@
           ['data.id', 'integer', '被删除的问卷 ID。'],
           ['-', '-', '说明：软删除（delete_time 标记），删除后列表与详情不再可见；启用中的问卷不能删除，需先禁用；子表题目/选项数据保留。']
         ]
+      },
+      {
+        code: 'B13', group: 'B 端—评价推送列表', name: '推送记录列表', method: 'POST', path: '/admin/push/list',
+        params: [
+          ['page', 'integer', '可选', '页码，默认 1。'],
+          ['page_size', 'integer', '可选', '每页条数，默认 10，最大 100（前端分页器 10/20/50）。'],
+          ['order_no', 'string', '可选', '订单号模糊搜索。'],
+          ['member_card_no', 'string', '可选', '会员卡号模糊搜索（对应前端「用户名」筛选框，按库内明文卡号匹配）。'],
+          ['phone', 'string', '可选', '手机号模糊搜索（库内为脱敏格式 138****0001，需按脱敏格式搜索，全号无法命中）。'],
+          ['push_state', 'string', '可选', '推送状态筛选：pushed=已推送（status 2/3/4/5/6）/ pending=待推送（status=1）。'],
+          ['answer_state', 'string', '可选', '答题状态筛选：submitted=已提交（status=4）/ opened=已打开（status=3）/ unopened=未打开（status=2）。'],
+          ['create_time_start', 'string', '可选', '创建时间起（YYYY-MM-DD，闭区间，补 00:00:00）。'],
+          ['create_time_end', 'string', '可选', '创建时间止（YYYY-MM-DD，闭区间，补 23:59:59）。']
+        ],
+        exampleJson: { page: 1, page_size: 10, push_state: 'pushed', answer_state: 'opened' },
+        exampleCurl: `curl -X POST 'http://localhost/admin/push/list' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"page":1,"page_size":10,"push_state":"pushed"}'`,
+        responseJson: { code: 0, message: '成功', data: { count: 48, list: [{ id: 1, order_no: 'E2E_003', member_card_no: '888****0001', phone: '138****0001', status: 4, status_text: '已提交', pushed_at: '2026-06-20 21:36:52', opened_at: '2026-06-20 21:36:52', submitted_at: '2026-06-20 21:36:52', create_time: '2026-06-20 21:36:52', dishes: ['清蒸鲈鱼', '红烧肉', '宫保鸡丁'] }] } },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data.count', 'integer', '符合筛选条件的总记录数。'],
+          ['data.list', 'array', '当前页列表，按 create_time 倒序、同秒按 id 倒序。'],
+          ['data.list[].id', 'integer', '实例 ID（同时为激励发放幂等键）。'],
+          ['data.list[].order_no', 'string', '订单号。'],
+          ['data.list[].member_card_no', 'string', '会员卡号（出参脱敏：前 3 后 4，中间 ****）。'],
+          ['data.list[].phone', 'string', '手机号（库内即脱敏格式，原样输出）。'],
+          ['data.list[].status', 'integer', '实例状态：1=待推送 2=已推送 3=已打开 4=已提交 5=已失效 6=推送失败。'],
+          ['data.list[].status_text', 'string', '状态文本（待推送/已推送/已打开/已提交/已失效/推送失败）。'],
+          ['data.list[].pushed_at', 'string|null', '推送时间，未推送为 null。'],
+          ['data.list[].opened_at', 'string|null', '打开时间，未打开为 null。'],
+          ['data.list[].submitted_at', 'string|null', '提交时间，未提交为 null。'],
+          ['data.list[].create_time', 'string', '创建时间。'],
+          ['data.list[].dishes', 'array', '命中菜品名称数组（按 sort_order 原价降序排列，前端自行 join 展示；无菜品为空数组）。'],
+          ['-', '-', '说明：前端两列状态均由 status 派生——推送状态列 status=1 显示待推送、其余显示已推送；答题状态列 status=4 已提交 / 3 已打开 / 2 未打开 / 1 未推送。'],
+          ['-', '-', '说明：push_state 与 answer_state 同传时取交集；本接口纯查询无审计，卡号脱敏不提供 unmasked（不脱敏查看属顾客评价详情接口，须配审计留痕）。']
+        ]
+      },
+      {
+        code: 'B14', group: 'B 端—顾客评价', name: '顾客评价列表', method: 'POST', path: '/admin/answer/list',
+        params: [
+          ['page', 'integer', '可选', '页码，默认 1。'],
+          ['page_size', 'integer', '可选', '每页条数，默认 10，最大 100（前端分页器 10/20/50）。'],
+          ['questionnaire_name', 'string', '可选', '问卷名称模糊搜索（questionnaires.name）。'],
+          ['submit_time_start', 'string', '可选', '提交时间起（YYYY-MM-DD，闭区间，补 00:00:00）。'],
+          ['submit_time_end', 'string', '可选', '提交时间止（YYYY-MM-DD，闭区间，补 23:59:59）。']
+        ],
+        exampleJson: { page: 1, page_size: 10, questionnaire_name: '全题型' },
+        exampleCurl: `curl -X POST 'http://localhost/admin/answer/list' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"page":1,"page_size":10}'`,
+        responseJson: { code: 0, message: '成功', data: { count: 12, list: [{ answer_id: 39, submitted_at: '2026-07-14 19:00:46', order_no: 'E2E-DEMO-39', questionnaire_id: 35, questionnaire_name: 'E2E自测全题型问卷', member_card_no: '888****0001', questions: [{ question_id: 281, question_type: 1, title: '单选-满意度', value: '满意' }] }] } },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data.count', 'integer', '符合筛选条件的总记录数。'],
+          ['data.list', 'array', '当前页列表，按提交时间倒序、同秒按 id 倒序。'],
+          ['data.list[].answer_id', 'integer', '答卷 ID（answers.id）。'],
+          ['data.list[].submitted_at', 'string', '提交时间。'],
+          ['data.list[].order_no', 'string', '订单号，无时为 --。'],
+          ['data.list[].questionnaire_id', 'integer', '问卷 ID，实例缺失时为 0。'],
+          ['data.list[].questionnaire_name', 'string', '问卷名称（提交时实例关联问卷），缺失时为 --。'],
+          ['data.list[].member_card_no', 'string', '顾客会员卡号（出参脱敏：前 3 后 4，中间 ****），缺失时为 --。'],
+          ['data.list[].questions', 'array', '作答题目数组（answers.payload 快照零拼装透传，前端直接渲染）。'],
+          ['data.list[].questions[].question_id', 'integer', '题目 ID。'],
+          ['data.list[].questions[].question_type', 'integer', '题型：1=单选 2=多选 3=NPS 4=维度 5=图片 6=文本 7=菜品。'],
+          ['data.list[].questions[].title', 'string', '题目标题（提交时快照）。'],
+          ['data.list[].questions[].value', 'mixed', '答案值，随题型：单选=选项文本、多选=文本数组、NPS=分值数字、维度={维度名:分}、图片=URL 数组、文本=字符串、菜品={goods_code:分}。'],
+          ['-', '-', '说明：payload 为提交时自包含快照，问卷后续改名/删题不影响历史答卷展示；实例缺失的孤儿答卷仍会展示（问卷列显示 --）。'],
+          ['-', '-', '说明：纯查询无审计，不提供 unmasked（不脱敏查看须配审计留痕，后续版本）。']
+        ]
+      },
+      {
+        code: 'B15', group: 'B 端—顾客评价', name: '答题明细', method: 'POST', path: '/admin/answer/detail',
+        params: [
+          ['answer_id', 'integer', '必填', '答卷 ID（answers.id）。']
+        ],
+        exampleJson: { answer_id: 39 },
+        exampleCurl: `curl -X POST 'http://localhost/admin/answer/detail' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"answer_id":39}'`,
+        responseJson: { code: 0, message: '成功', data: { answer_id: 39, submitted_at: '2026-07-14 19:00:46', order_no: 'E2E-DEMO-39', questionnaire_id: 35, questionnaire_name: 'E2E自测全题型问卷', member_card_no: '888****0001', questions: [{ question_id: 284, question_type: 4, title: '维度-各维度打分', value: { '口味': 5, '服务': 3 }, config: { dimensions: [{ name: '口味' }, { name: '服务' }] } }], dish_name_map: { '1000010020000287': '清蒸鲈鱼', '1000010020000288': '红烧肉' } } },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data.*', 'object', '单条结构同 B14 行结构。'],
+          ['data.questions[].config', 'object', '仅维度题（question_type=4）补充：题目 config（含 dimensions 维度名数组），题目已被编辑删除时不返回该键（前端按 value 键值兜底渲染）。'],
+          ['data.dish_name_map', 'object', '实例命中菜品映射 {goods_code: dish_name}（survey_dishes 快照按 sort_order），供菜品题 value 的 goods_code 转菜名展示。'],
+          ['-', '-', '说明：dish_name_map 来自实例时快照，稳定不受问卷后续编辑影响；实例缺失时为空对象。']
+        ]
       }
     ];
 

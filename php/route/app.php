@@ -42,6 +42,16 @@ Route::group('admin', function () {
         ->middleware(\app\middleware\AdminSign::class);
     Route::post('survey/delete', \app\controller\admin\Survey::class . '/deleteOp')
         ->middleware(\app\middleware\AdminSign::class);
+
+    // B 端评价推送列表：纯查询，执行统一入站验签。
+    Route::post('push/list', \app\controller\admin\PushList::class . '/listOp')
+        ->middleware(\app\middleware\AdminSign::class);
+
+    // B 端顾客评价：列表与答题明细查询，执行统一入站验签。
+    Route::post('answer/list', \app\controller\admin\CustomerAnswer::class . '/listOp')
+        ->middleware(\app\middleware\AdminSign::class);
+    Route::post('answer/detail', \app\controller\admin\CustomerAnswer::class . '/detailOp')
+        ->middleware(\app\middleware\AdminSign::class);
 });
 
 // ==================== API 分组（C 端）====================
