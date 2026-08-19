@@ -28,6 +28,21 @@ class AuditLogModel extends Model
     /** 商户菜品配置审计目标类型。 */
     public const TARGET_MERCHANT_DISH_CONFIG = 'merchant_dish_config';
 
+    /** 问卷保存动作。 */
+    public const ACTION_SAVE_SURVEY = 'save_survey';
+
+    /** 问卷复制动作。 */
+    public const ACTION_COPY_SURVEY = 'copy_survey';
+
+    /** 问卷启禁用动作。 */
+    public const ACTION_SURVEY_STATUS = 'survey_status';
+
+    /** 问卷删除动作。 */
+    public const ACTION_DELETE_SURVEY = 'delete_survey';
+
+    /** 问卷审计目标类型。 */
+    public const TARGET_SURVEY = 'survey';
+
     /** 逻辑表名，不包含数据库前缀。 */
     protected $name = 'audit_logs';
 

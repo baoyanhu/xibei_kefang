@@ -242,6 +242,197 @@
           ['data.merchant_id', 'integer', '商户 ID。'],
           ['data.dish_link_enabled', 'integer', '已保存的菜品数据关联开关。']
         ]
+      },
+      {
+        code: 'B07', group: 'B 端—问卷列表', name: '问卷列表', method: 'POST', path: '/admin/survey/list',
+        params: [
+          ['merchant_id', 'integer', '必填', '商户 ID，必须是正整数。'],
+          ['name', 'string', '可选', '问卷名称模糊筛选。'],
+          ['update_time_start', 'string', '可选', '更新时间起始日期，格式 Y-m-d，闭区间含当天 00:00:00。'],
+          ['update_time_end', 'string', '可选', '更新时间截止日期，格式 Y-m-d，闭区间含当天 23:59:59。'],
+          ['operator', 'string', '可选', '操作人姓名模糊筛选（匹配 users.name，无操作人显示 --）。'],
+          ['page', 'integer', '可选', '页码，默认 1。'],
+          ['page_size', 'integer', '可选', '每页条数，默认 10，最大 100。']
+        ],
+        exampleJson: { merchant_id: 1, name: '满意度', page: 1, page_size: 10 },
+        exampleCurl: `curl -X POST 'http://localhost/admin/survey/list' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"merchant_id":1,"name":"满意度","page":1,"page_size":10}'`,
+        responseJson: {
+          code: 0, message: '成功', data: {
+            count: 2,
+            list: [
+              { id: 35, name: '门店满意度问卷', status: 'enabled', question_count: 4, update_time: '2026-08-19 14:57:00', operator: '--' },
+              { id: 36, name: '满意度问卷 · 副本', status: 'draft', question_count: 0, update_time: '2026-08-19 10:00:00', operator: '张三' }
+            ]
+          }
+        },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data.count', 'integer', '符合筛选条件的总记录数。'],
+          ['data.list', 'array', '当前页问卷列表。'],
+          ['data.list[].id', 'integer', '问卷 ID。'],
+          ['data.list[].name', 'string', '问卷名称。'],
+          ['data.list[].status', 'string', '状态：draft=草稿 / disabled=禁用 / enabled=启用。'],
+          ['data.list[].question_count', 'integer', '题目数。'],
+          ['data.list[].update_time', 'string', '最后更新时间。'],
+          ['data.list[].operator', 'string', '操作人姓名；未记录时为 --。']
+        ]
+      },
+      {
+        code: 'B08', group: 'B 端—问卷列表', name: '问卷详情', method: 'POST', path: '/admin/survey/detail',
+        params: [
+          ['merchant_id', 'integer', '必填', '商户 ID，必须是正整数。'],
+          ['id', 'integer', '必填', '问卷 ID，必须是正整数。']
+        ],
+        exampleJson: { merchant_id: 1, id: 35 },
+        exampleCurl: `curl -X POST 'http://localhost/admin/survey/detail' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"merchant_id":1,"id":35}'`,
+        responseJson: {
+          code: 0, message: '成功', data: {
+            id: 35, merchant_id: 1, name: '门店满意度问卷', status: 'enabled', active_flag: 1,
+            question_count: 2, update_time: '2026-08-19 14:57:00', operator: '--',
+            questions: [
+              {
+                id: 281, group_id: 13, type: 1, title: '单选-满意度', sort_order: 1, required: 1,
+                config: { options_extras: [null, null, { text: true, image: false }, null] },
+                option_jumps: { 3: 2 },
+                options: [
+                  { id: 301, label: '非常满意', value: '非常满意', sort_order: 1 }
+                ],
+                nps_icons: []
+              },
+              {
+                id: 283, group_id: 13, type: 3, title: 'NPS-推荐可能性', sort_order: 2, required: 1,
+                config: { upper_bound: 10, nps_low_threshold: 3, nps_enable_text: false, nps_text_limit: 200, nps_enable_image: false, nps_image_limit: 3 },
+                option_jumps: {},
+                options: [],
+                nps_icons: [{ score: 1, image_url: 'https://img.example.com/nps-1.png' }]
+              }
+            ]
+          }
+        },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data.id / data.name / data.status', '-', '问卷基础信息，status 口径同 B07。'],
+          ['data.active_flag', 'integer', '互斥启用标记：1=当前启用卷；同商户最多 1 个。'],
+          ['data.question_count', 'integer', '题目数。'],
+          ['data.operator', 'string', '操作人姓名；未记录时为 --。'],
+          ['data.questions[].type', 'integer', '题型：1=单选 2=多选 3=NPS 4=维度 5=图片 6=文本 7=菜品。'],
+          ['data.questions[].required', 'integer', '是否必填：0=否 1=是。'],
+          ['data.questions[].config', 'object', '题型配置 JSON，各题型字段契约见 B09 说明。'],
+          ['data.questions[].option_jumps', 'object', '跳题规则：{位置: 目标}；位置为选项序号/分值/星数（1 起）；目标为题目序号（1 起）或 thanks（感谢页结束）；空对象表示无跳题。'],
+          ['data.questions[].options', 'array', '选项列表，仅单选/多选题型有值。'],
+          ['data.questions[].nps_icons', 'array', 'NPS 分值图标列表，仅 NPS 题型有值；score+image_url。']
+        ]
+      },
+      {
+        code: 'B09', group: 'B 端—问卷列表', name: '保存问卷（新增/编辑）', method: 'POST', path: '/admin/survey/save',
+        params: [
+          ['merchant_id', 'integer', '必填', '商户 ID，必须是正整数。'],
+          ['id', 'integer', '可选', '问卷 ID；不传或 0=新增（新建为草稿态），传正整数=整卷编辑。'],
+          ['name', 'string', '必填', '问卷名称，1-40 字。'],
+          ['operator_id', 'integer', '可选', '操作人用户 ID（users.id）；不传则操作人记为空。'],
+          ['questions', 'array', '必填', '题目数组，1-50 道；整卷全量替换，题目/选项/NPS 图标旧数据全部删除后重建。'],
+          ['questions[].type', 'integer', '必填', '题型：1=单选 2=多选 3=NPS 4=维度 5=图片 6=文本 7=菜品。'],
+          ['questions[].title', 'string', '必填', '题目标题，1-40 字。'],
+          ['questions[].required', 'integer', '必填', '是否必填：0=否 1=是；文本题会同步写入 config.required。'],
+          ['questions[].config', 'object', '必填', '题型配置：单选/多选无需传（由 options 推导 options_extras）；NPS={upper_bound(2-10), nps_low_threshold, nps_enable_text, nps_require_text, nps_text_limit, nps_enable_image, nps_require_image, nps_image_limit}；维度={dimensions:[{name}], star_slots(默认5星)}；图片={max_images(1-9)}；文本={text_mode(short|long), max_chars, enable_image, image_limit, require_image}；菜品={dish_config_mode(rating|dimension), dish_skus:[{goods_code,goods_name}], 评分模式再传 dish_score_max/dish_low_threshold/dish_enable_text/dish_enable_image 等, 维度模式再传 dimensions/star_slots/dish_dim_low_threshold}。'],
+          ['questions[].options', 'array', '单选/多选必填', '选项数组，至少 2 项；每项 {label(1-20字,题内唯一), extra:null|{text,image}}；extra 为选项级补充说明开关。'],
+          ['questions[].option_jumps', 'object', '可选', '跳题规则 {位置:目标}；位置 1 起（选项序号/分值/星数）；目标=后续题目序号（必须大于当前题序号）或 thanks；也接受顺序数组形态（下标+1 为位置）。'],
+          ['questions[].nps_icons', 'array', '可选', 'NPS 分值图标 [{score, image_url}]；score 需在 1-upper_bound 内且不重复；image_url ≤500KB（dataURL 或 URL）；不传的题目用默认数字图标。']
+        ],
+        exampleJson: {
+          merchant_id: 1,
+          name: '门店满意度问卷',
+          questions: [
+            {
+              type: 1, title: '你对西贝菜品满意吗？', required: 1, config: {},
+              options: [
+                { label: '非常满意', extra: null },
+                { label: '满意', extra: { text: true, image: false } },
+                { label: '一般', extra: null },
+                { label: '不满意', extra: { text: true, image: true } }
+              ],
+              option_jumps: { 4: 3 }
+            },
+            { type: 3, title: '给我们菜品打个分', required: 1, config: { upper_bound: 5, nps_low_threshold: 3, nps_enable_text: true, nps_require_text: true, nps_text_limit: 50, nps_enable_image: true, nps_require_image: true, nps_image_limit: 1 }, nps_icons: [] },
+            { type: 4, title: '请对菜品打个分', required: 1, config: { dimensions: [{ name: '口味' }, { name: '辣度' }] }, option_jumps: { 1: 'thanks' } }
+          ]
+        },
+        exampleCurl: `curl -X POST 'http://localhost/admin/survey/save' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"merchant_id":1,"name":"门店满意度问卷","questions":[{"type":1,"title":"你对西贝菜品满意吗？","required":1,"config":{},"options":[{"label":"非常满意","extra":null},{"label":"满意","extra":{"text":true,"image":false}},{"label":"一般","extra":null},{"label":"不满意","extra":{"text":true,"image":true}}],"option_jumps":{"4":3}},{"type":3,"title":"给我们菜品打个分","required":1,"config":{"upper_bound":5,"nps_low_threshold":3,"nps_enable_text":true,"nps_require_text":true,"nps_text_limit":50,"nps_enable_image":true,"nps_require_image":true,"nps_image_limit":1}},{"type":4,"title":"请对菜品打个分","required":1,"config":{"dimensions":[{"name":"口味"},{"name":"辣度"}]},"option_jumps":{"1":"thanks"}}]}'`,
+        responseJson: {
+          code: 0, message: '成功', data: { id: 41 }
+        },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data.id', 'integer', '新增或编辑后的问卷 ID。']
+        ]
+      },
+      {
+        code: 'B10', group: 'B 端—问卷列表', name: '复制问卷', method: 'POST', path: '/admin/survey/copy',
+        params: [
+          ['merchant_id', 'integer', '必填', '商户 ID，必须是正整数。'],
+          ['id', 'integer', '必填', '源问卷 ID。'],
+          ['operator_id', 'integer', '可选', '操作人用户 ID（users.id）。']
+        ],
+        exampleJson: { merchant_id: 1, id: 35 },
+        exampleCurl: `curl -X POST 'http://localhost/admin/survey/copy' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"merchant_id":1,"id":35}'`,
+        responseJson: { code: 0, message: '成功', data: { id: 42 } },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data.id', 'integer', '新副本问卷 ID。'],
+          ['-', '-', '说明：深拷贝主表+题目+选项+NPS 图标；副本名称=原名+「 · 副本」；状态固定草稿；跳题目标自动映射到新题目。']
+        ]
+      },
+      {
+        code: 'B11', group: 'B 端—问卷列表', name: '启用/禁用问卷', method: 'POST', path: '/admin/survey/status',
+        params: [
+          ['merchant_id', 'integer', '必填', '商户 ID，必须是正整数。'],
+          ['id', 'integer', '必填', '问卷 ID。'],
+          ['action', 'string', '必填', 'enable=启用 / disable=禁用。'],
+          ['operator_id', 'integer', '可选', '操作人用户 ID（users.id）。']
+        ],
+        exampleJson: { merchant_id: 1, id: 42, action: 'enable' },
+        exampleCurl: `curl -X POST 'http://localhost/admin/survey/status' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"merchant_id":1,"id":42,"action":"enable"}'`,
+        responseJson: { code: 0, message: '成功', data: { id: 42, status: 'enabled' } },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data.id', 'integer', '问卷 ID。'],
+          ['data.status', 'string', '更新后的状态：enabled / disabled。'],
+          ['-', '-', '说明：启用与同商户互斥联动——启用成功时同商户其他启用问卷自动置为禁用（事务内完成）；禁用仅对当前启用中的问卷有效，未启用的问卷禁用会报错。']
+        ]
+      },
+      {
+        code: 'B12', group: 'B 端—问卷列表', name: '删除问卷', method: 'POST', path: '/admin/survey/delete',
+        params: [
+          ['merchant_id', 'integer', '必填', '商户 ID，必须是正整数。'],
+          ['id', 'integer', '必填', '问卷 ID。'],
+          ['operator_id', 'integer', '可选', '操作人用户 ID（users.id）。']
+        ],
+        exampleJson: { merchant_id: 1, id: 42 },
+        exampleCurl: `curl -X POST 'http://localhost/admin/survey/delete' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"merchant_id":1,"id":42}'`,
+        responseJson: { code: 0, message: '成功', data: { id: 42 } },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data.id', 'integer', '被删除的问卷 ID。'],
+          ['-', '-', '说明：软删除（delete_time 标记），删除后列表与详情不再可见；启用中的问卷不能删除，需先禁用；子表题目/选项数据保留。']
+        ]
       }
     ];
 

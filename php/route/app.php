@@ -28,6 +28,20 @@ Route::group('admin', function () {
         ->middleware(\app\middleware\AdminSign::class);
     Route::post('dish/save', \app\controller\admin\Dish::class . '/saveOp')
         ->middleware(\app\middleware\AdminSign::class);
+
+    // B 端问卷列表管理：列表/详情/保存/复制/启禁用/删除均执行统一入站验签。
+    Route::post('survey/list', \app\controller\admin\Survey::class . '/listOp')
+        ->middleware(\app\middleware\AdminSign::class);
+    Route::post('survey/detail', \app\controller\admin\Survey::class . '/detailOp')
+        ->middleware(\app\middleware\AdminSign::class);
+    Route::post('survey/save', \app\controller\admin\Survey::class . '/saveOp')
+        ->middleware(\app\middleware\AdminSign::class);
+    Route::post('survey/copy', \app\controller\admin\Survey::class . '/copyOp')
+        ->middleware(\app\middleware\AdminSign::class);
+    Route::post('survey/status', \app\controller\admin\Survey::class . '/statusOp')
+        ->middleware(\app\middleware\AdminSign::class);
+    Route::post('survey/delete', \app\controller\admin\Survey::class . '/deleteOp')
+        ->middleware(\app\middleware\AdminSign::class);
 });
 
 // ==================== API 分组（C 端）====================
