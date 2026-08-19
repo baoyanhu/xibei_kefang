@@ -52,6 +52,10 @@ Route::group('admin', function () {
         ->middleware(\app\middleware\AdminSign::class);
     Route::post('answer/detail', \app\controller\admin\CustomerAnswer::class . '/detailOp')
         ->middleware(\app\middleware\AdminSign::class);
+
+    // B 端评价发放记录：纯查询发放流水，执行统一入站验签。
+    Route::post('reward/list', \app\controller\admin\RewardRecord::class . '/listOp')
+        ->middleware(\app\middleware\AdminSign::class);
 });
 
 // ==================== API 分组（C 端）====================

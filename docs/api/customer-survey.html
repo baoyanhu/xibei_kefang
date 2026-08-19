@@ -524,6 +524,46 @@
           ['data.dish_name_map', 'object', '实例命中菜品映射 {goods_code: dish_name}（survey_dishes 快照按 sort_order），供菜品题 value 的 goods_code 转菜名展示。'],
           ['-', '-', '说明：dish_name_map 来自实例时快照，稳定不受问卷后续编辑影响；实例缺失时为空对象。']
         ]
+      },
+      {
+        code: 'B16', group: 'B 端—评价发放记录', name: '发放记录列表', method: 'POST', path: '/admin/reward/list',
+        params: [
+          ['page', 'integer', '可选', '页码，默认 1。'],
+          ['page_size', 'integer', '可选', '每页条数，默认 10，最大 100（前端分页器 10/20/50）。'],
+          ['order_no', 'string', '可选', '订单号模糊搜索（survey_instances.order_no）。'],
+          ['member_card_no', 'string', '可选', '会员卡号模糊搜索（按库内明文卡号匹配）。'],
+          ['coupon_template_id', 'string', '可选', '券模板 ID 模糊搜索（reward_records.coupon_template_id）。'],
+          ['coupon_no', 'string', '可选', '券号模糊搜索（reward_records.coupon_no）。'],
+          ['reward_type', 'integer', '可选', '激励类型：1=积分 2=券，其他值报错。'],
+          ['status', 'integer', '可选', '发放状态：1=待发放 2=发放中 3=已发放 4=发放失败 5=已人工补发，其他值报错。']
+        ],
+        exampleJson: { page: 1, page_size: 10, reward_type: 2, status: 3 },
+        exampleCurl: `curl -X POST 'http://localhost/admin/reward/list' \\
+  -H 'Content-Type: application/json' \\
+  -d '{"page":1,"page_size":10,"reward_type":2}'`,
+        responseJson: { code: 0, message: '成功', data: { count: 21, list: [{ id: 7, instance_id: 21, order_no: 'MANUAL-COUPON-168114125668', member_card_no: '168****2566', reward_type: 2, reward_type_text: '券', points: null, coupon_template_id: '100426540', coupon_no: '168114125668', status: 3, status_text: '已发放', grant_serial_no: 'GRANT-20260627-001', create_time: '2026-06-27 16:35:20', granted_at: '2026-06-27 16:35:20', failure_reason: null }] } },
+        responseFields: [
+          ['code', 'integer', '业务响应码，0 表示成功。'],
+          ['message', 'string', '响应提示。'],
+          ['data.count', 'integer', '符合筛选条件的总记录数。'],
+          ['data.list', 'array', '当前页列表，按 create_time 倒序、同秒按 id 倒序。'],
+          ['data.list[].id', 'integer', '记录 ID（reward_records.id）。'],
+          ['data.list[].instance_id', 'integer', '问卷实例 ID。'],
+          ['data.list[].order_no', 'string', '订单号（leftJoin survey_instances 取得，实例被清理时为 --）。'],
+          ['data.list[].member_card_no', 'string', '会员卡号（出参脱敏：前 3 后 4，中间 ****；实例缺失为 --）。'],
+          ['data.list[].reward_type', 'integer', '激励类型：1=积分 2=券。'],
+          ['data.list[].reward_type_text', 'string', '激励类型文本（积分/券）。'],
+          ['data.list[].points', 'integer|null', '积分数（券记录为 null）；内容列由前端拼装「N 积分」。'],
+          ['data.list[].coupon_template_id', 'string|null', '券模板 ID（积分记录为 null）；内容列由前端拼装「模板 {id}」。'],
+          ['data.list[].coupon_no', 'string|null', '券号，未发放/积分记录为 null。'],
+          ['data.list[].status', 'integer', '发放状态：1=待发放 2=发放中 3=已发放 4=发放失败 5=已人工补发。'],
+          ['data.list[].status_text', 'string', '状态文本。'],
+          ['data.list[].grant_serial_no', 'string|null', '发放流水号。'],
+          ['data.list[].create_time', 'string', '记录创建时间。'],
+          ['data.list[].granted_at', 'string|null', '发放完成时间，未发放为 null。'],
+          ['data.list[].failure_reason', 'string|null', '失败原因（status=4 时非空）。'],
+          ['-', '-', '说明：纯查询接口零写入零审计；retry_count 原型未展示不出参；原型 BFF 端点 /b/reward-records，联调以前端改指向为准；人工补发（manual-grant）原型页面无按钮，本期不提供。']
+        ]
       }
     ];
 
